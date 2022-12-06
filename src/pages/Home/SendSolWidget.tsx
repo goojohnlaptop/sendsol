@@ -78,8 +78,6 @@ export const SendSolWidget: FC = () => {
     async (startBlock: number) => {
       const interval = setInterval(async () => {
         const recentBlockhash = await connection.getLatestBlockhash();
-        console.log("recentBlockhashXX");
-        console.log(recentBlockhash?.lastValidBlockHeight);
         setConfirmations(
           (recentBlockhash?.lastValidBlockHeight ?? 0) - startBlock
         );
@@ -136,17 +134,18 @@ export const SendSolWidget: FC = () => {
     let adjustedAmt = asBig
       .multipliedBy(LAMPORTS_PER_SOL)
       .plus(BigNumber(fee || 0).dividedBy(LAMPORTS_PER_SOL));
-
     return (
-      adjustedAmt > BigNumber(0) &&
-      adjustedAmt <= (balance !== null ? balance : BigNumber(0))
+      adjustedAmt.isGreaterThan(BigNumber(0)) &&
+      adjustedAmt.isLessThanOrEqualTo(balance != null ? balance : BigNumber(0))
     );
   }, [amount, balance, fee]);
+
 
   const onSendClick = useCallback(async () => {
     if (!isValidAmount) {
       return setNextPressed(true);
     }
+    setNextPressed(false);
     if (!publicKey) throw new WalletNotConnectedError();
 
     setLoading(true);
