@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { Box, Button, Typography } from "@mui/material";
-import IconLogo from "../assets/funds.svg";
+import IconLogo from "../../assets/funds.svg";
 
 const styles = {
   container: {
@@ -8,11 +8,6 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     justifyContent: "flex-start",
-    alignItems: "center",
-  },
-  rightContainer: {
-    display: "flex",
-    flexDirection: "horizontal",
     alignItems: "center",
   },
 };

@@ -1,6 +1,6 @@
 import React from "react";
 import { Box } from "@mui/material";
-import { Header } from "./Header";
+import { Header } from "../../components/Header";
 import { SendSolWidget } from "./SendSolWidget";
 import { LogoPanel } from "./LogoPanel";
 
@@ -23,7 +23,7 @@ const styles = {
   },
 };
 
-export const HomeContainer: React.FC = () => {
+export const Home: React.FC = () => {
   return (
     <Box sx={styles.container}>
       <Header />

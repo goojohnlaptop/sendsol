@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Link, Typography } from "@mui/material";
 import Logo from "../assets/logo.svg";
 import { WalletMultiButton } from "@solana/wallet-adapter-material-ui";
 
@@ -26,22 +26,32 @@ export const Header: React.FC = () => {
   const goHome = () => {
     const win: Window = window;
     win.location = "/";
-  }
+  };
 
   return (
     <Box px={3} py={2} m={2} sx={styles.container}>
-      <Box onClick={goHome}>
-        <img height="24px" src={Logo} alt="React Logo" />
+      <Box>
+        <Link component="button" onClick={goHome}>
+          <img
+            height="24px"
+            src={Logo}
+            alt="Acme Logo"
+            // style={{ cursor: "pointer" }}
+          />
+        </Link>
       </Box>
+
       <Box sx={styles.rightContainer}>
-        <Typography
+        <Link
+          href="#"
           onClick={goHome}
           mr={4}
           color="linkColor.main"
+          underline="none"
           variant="subtitle1"
         >
           Home
-        </Typography>
+        </Link>
         <WalletMultiButton variant="contained">
           Connect Wallet
         </WalletMultiButton>

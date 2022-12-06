@@ -10,14 +10,14 @@ import { clusterApiUrl } from "@solana/web3.js";
 import { useSnackbar } from "notistack";
 import type { FC, ReactNode } from "react";
 import React, { useCallback, useMemo } from "react";
-import { HomeContainer } from "./views/HomeContainer";
+import { Home } from "./pages/Home/Home";
 import { Theme } from "./Theme";
 
 export const App: FC = () => {
   return (
     <Theme>
       <Context>
-        <Content />
+        <Home />
       </Context>
     </Theme>
   );
@@ -57,6 +57,3 @@ const Context: FC<{ children: ReactNode }> = ({ children }) => {
   );
 };
 
-const Content: FC = () => {
-  return <HomeContainer />;
-};
