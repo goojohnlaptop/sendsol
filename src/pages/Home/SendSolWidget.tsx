@@ -23,6 +23,7 @@ import { useGetSolanaPrice } from "../../hooks/useGetSolanaPrice";
 
 const LAMPORTS_PER_SOL = BigNumber(1000000000);
 const CONFIRMATIONS_FOR_SUCCESS = 21;
+const TEMP_RANDO_KEY = Keypair.generate().publicKey;
 
 export const SendSolWidget: FC = () => {
   const { connection } = useConnection();
@@ -56,6 +57,7 @@ export const SendSolWidget: FC = () => {
     if (balance) {
       setAmount(
         balance
+          .minus(BigNumber(minLamports))
           .minus(BigNumber(fee || 0))
           .dividedBy(LAMPORTS_PER_SOL)
           .toString()
@@ -92,8 +94,6 @@ export const SendSolWidget: FC = () => {
     [connection, setConfirmations]
   );
 
-  const tempRandoKey = Keypair.generate().publicKey;
-
   useEffect(() => {
     (async () => {
       if (publicKey) {
@@ -107,7 +107,7 @@ export const SendSolWidget: FC = () => {
         }).add(
           SystemProgram.transfer({
             fromPubkey: publicKey,
-            toPubkey: tempRandoKey,
+            toPubkey: TEMP_RANDO_KEY,
             lamports: 9999,
           })
         );
@@ -119,7 +119,7 @@ export const SendSolWidget: FC = () => {
         }
       }
     })();
-  }, [connection, publicKey, setMinLamports, tempRandoKey]);
+  }, [connection, publicKey, setMinLamports]);
 
   const closeConfirmationBox = () => {
     setIsWaitingForConfirmation(false);
@@ -133,13 +133,13 @@ export const SendSolWidget: FC = () => {
     }
     let adjustedAmt = asBig
       .multipliedBy(LAMPORTS_PER_SOL)
+      .plus(BigNumber(minLamports))
       .plus(BigNumber(fee || 0).dividedBy(LAMPORTS_PER_SOL));
     return (
       adjustedAmt.isGreaterThan(BigNumber(0)) &&
       adjustedAmt.isLessThanOrEqualTo(balance != null ? balance : BigNumber(0))
     );
-  }, [amount, balance, fee]);
-
+  }, [amount, balance, fee, minLamports]);
 
   const onSendClick = useCallback(async () => {
     if (!isValidAmount) {
@@ -157,6 +157,7 @@ export const SendSolWidget: FC = () => {
         lamports: BigInt(
           BigNumber(minLamports)
             .plus(BigNumber(amount).multipliedBy(LAMPORTS_PER_SOL))
+            .decimalPlaces(0, 1)
             .toString()
         ),
       })
@@ -277,11 +278,11 @@ export const SendSolWidget: FC = () => {
                   </Typography>
                 </Box>
                 <Box sx={{}}>
-                  <IconButton
-                    onClick={onCopyClick}
-                    
-                  >
-                    <ContentCopyIcon color="action" sx={{ width: "25px", height: "25px" }} />
+                  <IconButton onClick={onCopyClick}>
+                    <ContentCopyIcon
+                      color="action"
+                      sx={{ width: "25px", height: "25px" }}
+                    />
                   </IconButton>
                 </Box>
               </Box>
